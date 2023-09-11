@@ -117,7 +117,7 @@ RUN chown odoo /etc/odoo/odoo.conf \
     && chown -R odoo /mnt/extra-addons
 VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 
-ADD repo /mnt/repo
+#ADD repo /mnt/repo
 
 
 # Expose Odoo services
