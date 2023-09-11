@@ -17,9 +17,7 @@ RUN apt-get update && \
         libssl-dev \
         node-less \
         npm \
-        python3-magic \
         python3-num2words \
-        python3-odf \
         python3-pdfminer \
         python3-pip \
         python3-phonenumbers \
@@ -33,21 +31,53 @@ RUN apt-get update && \
         python3-xlrd \
         python3-xlwt \
         xz-utils \
-	build-essential \
-	libfontconfig1-dev \
-	libfreetype6-dev \
-	$jpeg \
-	libpng-dev \
-	$ssl \
-	libx11-dev \
- 	libxext-dev \
- 	libxrender-dev \
-	$python \
-	zlib1g-dev \
-	libc6 \
+        build-essential \
+        pkg-config \
+        libsasl2-dev \
+        libldap2-dev \
+        python3-dev \
+        git \
+        vim \
+        ghostscript \
+        imagemagick \
+        libbsd0 \
+        libbz2-1.0 \
+        libc6 \
+        libedit2 \
+        libffi7 \
+        libgcc1 \
+        libgcrypt20 \
+        libgmp10 \
+        libgnutls30 \
+        libgpg-error0 \
+        libhogweed6 \
+        libidn11 \
+        libldap-2.4-2 \
+        liblzma5 \
+        libncurses5 \
+        libnettle8 \
+        libp11-kit0 \
+        libpq5 \
+        libreadline8 \
+        libsasl2-2 \
+        libsqlite3-0 \
+        libssl1.1 \
+        libstdc++6 \
+        libtasn1-6 \
+        libtinfo5 \
+        libxml2 \
+        libxslt1.1 \
+        zlib1g \
+        zsh \
+        neovim \
+        libxml2-dev \
+        libxmlsec1-dev \
+        libxmlsec1-openssl \
+        libcups2-dev \
+        libreadline-dev \
     && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb \
     && echo 'ea8277df4297afc507c61122f3c349af142f31e5 wkhtmltox.deb' | sha1sum -c - \
-    && apt-get install -y  ./wkhtmltox.deb \
+    && apt-get install -y --no-install-recommends ./wkhtmltox.deb \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
 # install latest postgresql-client
@@ -87,6 +117,9 @@ RUN chown odoo /etc/odoo/odoo.conf \
     && chown -R odoo /mnt/extra-addons
 VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 
+ADD repo /mnt/repo
+
+
 # Expose Odoo services
 EXPOSE 8069 8071 8072
 
@@ -96,7 +129,7 @@ ENV ODOO_RC /etc/odoo/odoo.conf
 COPY wait-for-psql.py /usr/local/bin/wait-for-psql.py
 
 # Set default user when running the container
-USER root
+USER odoo
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["odoo"]
